@@ -11,6 +11,14 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s -%(m
 
 class SimpleGridApp(object):
     def __init__(self, root):
+        self.paths = []
+        self.pathsEntry = []
+        self.path_sets = []
+        self.proStartButton = []
+        self.proStopButton = []
+        self.process = []
+        self.runable = []
+        
         self.num_frame = tkinter.Frame()
         self.num = tkinter.Entry(self.num_frame)
         self.b = tkinter.Button(self.num_frame, text="get", width=10, command=self.numSet)
@@ -31,16 +39,11 @@ class SimpleGridApp(object):
         
         
     def numSet(self):
-        self.paths = []
-        self.pathsEntry = []
-        self.path_sets = []
-        self.proStartButton = []
-        self.proStopButton = []
         self.numProcess = int(self.num.get())
-        self.process = []
-        self.runable = []
-        
-        for i in range(self.numProcess):
+        len_already = len(self.paths)
+        if (len_already >= self.numProcess):
+            return
+        for i in range(len_already, self.numProcess):
             process_frame = tkinter.Frame()
             #check_button = tkinter.Checkbutton(process_frame)
             path = tkinter.Entry(process_frame)
@@ -51,6 +54,7 @@ class SimpleGridApp(object):
             path_set.pack(side=LEFT)
             pstr.pack(side=LEFT)
             pstp.pack(side=LEFT)
+            
             process_frame.pack()
             self.paths.append('')
             self.pathsEntry.append(path)
@@ -84,7 +88,7 @@ class SimpleGridApp(object):
             self.paths[ith] = (self.pathsEntry[ith].get())
             #self.process[ith] = Process(target=self.subProcess, args=(ith,))
             self.process[ith] = threading.Thread(target=self.subProcess, args=(ith, self.runable[ith]))
-            logging.info(self.process)
+            logging.info(self.runable)
             
             self.proStartButton[ith]['state']=tkinter.DISABLED
             self.proStopButton[ith]['state']=tkinter.NORMAL
@@ -103,8 +107,6 @@ class SimpleGridApp(object):
     
         
 if __name__ == '__main__':
-    
-    
     top = tkinter.Tk()
     
     test = SimpleGridApp(top)
