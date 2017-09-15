@@ -1,7 +1,6 @@
 import xs
 import os
 import logging
-from multiprocessing import Process
 import threading
 import pandas as pd
 INTERPRETER = "python"
@@ -13,10 +12,23 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s -%(m
 #checkToday888(jdtm)
 
 
-def followBook(ith):
+def followBook(ith, module_path):
     logging.info('正在追' + xss[ith].name)
-    xss[ith].checkToday()
-    xss[ith].relax()
+    filename = module_path + '/zs888.pyrunable.txt'
+    file_object = open(filename, 'r')
+    try:
+        flag_run = file_object.read()
+    finally:
+        file_object.close()
+        
+    while flag_run == 'True':
+        xss[ith].checkToday()
+        xss[ith].relax()
+        file_object = open(filename, 'r')
+        try:
+            flag_run = file_object.read()
+        finally:
+            file_object.close()
 
 
 if __name__ == '__main__':
@@ -40,7 +52,7 @@ if __name__ == '__main__':
         xss.append(xs.xs(ith[1], ith[2], listtmp))
     
     for i in range(len(xss)):
-        p = threading.Thread(target=followBook, args=(i,))
+        p = threading.Thread(target=followBook, args=(i,module_path))
         #p = Process(target=followBook, args=(i,))
         p.start()
 '''

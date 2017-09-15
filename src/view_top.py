@@ -39,10 +39,26 @@ class SimpleGridApp(object):
     def __getPath(self, ith):
         return self.pathsTexts[ith].get('1.0', "end-1c")
     
+    def __setRun(self, ith):
+            file_object = open(self.paths[ith]+'runable.txt', 'w')
+            try:
+                file_object.write('True')
+            finally:
+                file_object.close()
+                
+                
+    def __setStop(self, ith):
+            file_object = open(self.paths[ith]+'runable.txt', 'w')
+            try:
+                file_object.write('False')
+            finally:
+                file_object.close()
+    
     def startAll(self):
         for ith in range(len(iniPaths)):
             self.process[ith] = threading.Thread(target=self.subProcess, args=(ith, self.runable[ith]))
             self.__resetText(ith)
+            self.__setRun(ith)
             
             self.proStartButton[ith]['state']=tkinter.DISABLED
             self.proStopButton[ith]['state']=tkinter.NORMAL
@@ -119,6 +135,7 @@ class SimpleGridApp(object):
             if len(self.__getPath(ith)) != 0:
                 self.paths[ith] = (self.__getPath(ith))
             self.__resetText(ith)
+            self.__setRun(ith)
             #self.process[ith] = Process(target=self.subProcess, args=(ith,))
             self.process[ith] = threading.Thread(target=self.subProcess, args=(ith, self.runable[ith]))
             #logging.info(self.runable)
@@ -134,6 +151,7 @@ class SimpleGridApp(object):
         def stop():
             self.proStartButton[ith]['state']=tkinter.NORMAL
             self.proStopButton[ith]['state']=tkinter.DISABLED
+            self.__setStop(ith)
             #self.process[ith].terminate()
             self.runable[ith].value = False
         return stop
