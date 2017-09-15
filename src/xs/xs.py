@@ -16,7 +16,7 @@ class xs:
         self.timeB = timeB
         self.timeB.append(['23:59'] * 2)
         #print(self.timeB)
-        self.wk = WorkInTime.WorkInTime(self.timeB, 5, 11)  # 休息10分钟
+        self.wk = WorkInTime.WorkInTime(self.timeB, 60*10, 11)  # 休息10分钟
         self.sendedList = []
 
     def getUrl(self):
