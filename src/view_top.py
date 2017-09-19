@@ -39,16 +39,22 @@ class SimpleGridApp(object):
     def __getPath(self, ith):
         return self.pathsTexts[ith].get('1.0', "end-1c")
     
+    def __getFlagFileName(self, ith):
+        if self.paths[ith][0] == '.':
+            return module_path + self.paths[ith][1:] +'runable.txt'
+        else:
+            return self.paths[ith] +'runable.txt'
+    
     def __setRun(self, ith):
-            file_object = open(self.paths[ith]+'runable.txt', 'w')
-            try:
-                file_object.write('True')
-            finally:
-                file_object.close()
+        file_object = open(self.__getFlagFileName(ith), 'w')
+        try:
+            file_object.write('True')
+        finally:
+            file_object.close()
                 
                 
     def __setStop(self, ith):
-            file_object = open(self.paths[ith]+'runable.txt', 'w')
+            file_object = open(self.__getFlagFileName(ith), 'w')
             try:
                 file_object.write('False')
             finally:
@@ -71,8 +77,14 @@ class SimpleGridApp(object):
             self.proStopButton[ith]['state']=tkinter.DISABLED
             self.runable[ith].value = False
     
+    def __getFileName(self, ith):
+        if self.paths[ith][0] == '.':
+            return module_path + self.paths[ith][1:]
+        else:
+            return self.paths[ith]
+        
     def subProcess(self, ith, alive):
-        cmd = 'python ' + self.paths[ith]
+        cmd = 'python ' + self.__getFileName(ith)
         logging.info('%i: %s start' % (ith, cmd))
         #os.system(cmd)
         #os.system(r'python C:\Users\jlgs-jz\git\gzr\zs888.py')    

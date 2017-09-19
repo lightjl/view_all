@@ -6,6 +6,10 @@ import time
 import datetime
 import getContent
 import WorkInTime
+import logging
+
+#timeB = [['19:46', '23:00']]
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s -%(message)s')
 
 class xs:
     def __init__(self, name, url, timeB):
@@ -40,6 +44,7 @@ class xs:
 
     def checkToday(self):
         self.sendedList = recMail.checkMailList(30)  # 30 days
+        #logging.info('checking' + self.name)
         try:
             url = self.getUrl()
             html = requests.get(url)
