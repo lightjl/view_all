@@ -19,17 +19,13 @@ class Xjgl(object):
         self.__initHigh = highIn
         self.__setDay = setDay
 
-    def setInitHigh(self, highIn):
-        self.__initHigh = highIn
+    def setInitHigh(self, inithighIn):
+        self.__initHigh = inithighIn
 
     def reset(self):
         self.__highIn = self.__initHigh
         self.__setDay = datetime.now().day
 
-    def WatchXjgl(self):
-        sendString = ''
-        if datetime.now().day != self.__setDay:
-            self.__setDay = now.day
 
     def WatchXjgl(self):
         sendString = ''
@@ -50,8 +46,8 @@ class Xjgl(object):
         rowHigh = float(row['cell']['price'])
         if rowHigh > self.__highIn:    #新高超过前基准
             sub = '逆回购: ' + row['id'] + ' 破 ' + str(self.__highIn) + ', 现价: ' + row['cell']['price']
+            logging.info("逆回购破 :%f, 现价: %s" % (self.__highIn, row['cell']['price']))
             self.__highIn = max(self.__highIn * 1.3, rowHigh)
-            print(sub)
             sendMail.sendMail(sub, "")
 
 
@@ -60,6 +56,7 @@ nowDay = now.day
 priceIn = 4.6
 logging.info("现金管理正在运行")
 timeTrade = [['9:29', '11:30'], ['13:00', '15:00']]
+#timeTrade = [['9:29', '11:30']]
 workTime = WorkInTime.WorkInTime(timeTrade, weekday='0,1,2,3,4')
 
 
@@ -76,6 +73,7 @@ if __name__ == '__main__':
     while flag_run == 'True':
         if now.weekday() ==4:
             xjglWatch.setInitHigh(priceIn*3)
+            logging.info('Today is Friday, %f' % (priceIn*3))
         else:
             xjglWatch.setInitHigh(priceIn)
         #logging.info(datetime.now())
