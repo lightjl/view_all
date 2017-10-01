@@ -42,17 +42,6 @@ class xs:
             #print("更新了")
             sendMail.send_attachment_kd(self.__getContent.sub_folder, filename)
 
-
-    def subRelax(self, ith, alive):
-        cmd = 'python ' + self.__getFileName(ith)
-        logging.info('%i: %s start' % (ith, cmd))
-        #os.system(cmd)
-        #os.system(r'python C:\Users\jlgs-jz\git\gzr\zs888.py')    
-        while alive.value:
-            os.system(cmd)
-            
-        logging.info('%i: %s stoped' % (ith, cmd))
-
     def relax(self, alive):
         relaxNow = threading.Thread(target=self.wk.relax, args=(alive,))
         relaxNow.start()
