@@ -84,7 +84,7 @@ class SimpleGridApp(object):
             return self.paths[ith]
         
     def subProcess(self, ith, alive):
-        cmd = 'python ' + self.__getFileName(ith)
+        cmd = 'python3 ' + self.__getFileName(ith)
         logging.info('%i: %s start' % (ith, cmd))
         #os.system(cmd)
         #os.system(r'python C:\Users\jlgs-jz\git\gzr\zs888.py')    
@@ -176,7 +176,7 @@ if __name__ == '__main__':
     #print(iniPathsPd)
     iniPaths = []
     for row in iniPathsPd:
-        print(row[1])
+        #print(row[1])
         iniPaths.append(row[1])
     
     top = tkinter.Tk()

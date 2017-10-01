@@ -6,7 +6,10 @@ import time
 import datetime
 import getContent
 import WorkInTime
+import threading
 import logging
+
+from multiprocessing import Process, Value
 
 #timeB = [['19:46', '23:00']]
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s -%(message)s')
@@ -39,8 +42,22 @@ class xs:
             #print("更新了")
             sendMail.send_attachment_kd(self.__getContent.sub_folder, filename)
 
-    def relax(self):
-        self.wk.relax()
+
+    def subRelax(self, ith, alive):
+        cmd = 'python ' + self.__getFileName(ith)
+        logging.info('%i: %s start' % (ith, cmd))
+        #os.system(cmd)
+        #os.system(r'python C:\Users\jlgs-jz\git\gzr\zs888.py')    
+        while alive.value:
+            os.system(cmd)
+            
+        logging.info('%i: %s stoped' % (ith, cmd))
+
+    def relax(self, alive):
+        relaxNow = threading.Thread(target=self.wk.relax, args=(alive,))
+        relaxNow.start()
+        relaxNow.join()
+
 
     def checkToday(self):
         self.sendedList = recMail.checkMailList(30)  # 30 days

@@ -6,6 +6,8 @@ import os
 import time
 import sendMail
 import WorkInTime
+from multiprocessing import Process, Value
+import threading
 import logging
 
 
@@ -63,8 +65,9 @@ timeTrade = [['9:29', '11:30'], ['13:00', '15:00']]
 workTime = WorkInTime.WorkInTime(timeTrade, weekday='0,1,2,3,4')
 
 
-if __name__ == '__main__':
-    xjglWatch = Xjgl(priceIn)
+runFlag = Value('b', True)
+
+def checkRunFlag():
     module_path = os.path.dirname(__file__)
     filename = module_path + '/xjgl.pyrunable.txt'
     file_object = open(filename, 'r')
@@ -72,19 +75,33 @@ if __name__ == '__main__':
         flag_run = file_object.read()
     finally:
         file_object.close()
-        
     while flag_run == 'True':
+        time.sleep(5)
+        file_object = open(filename, 'r')
+        try:
+            flag_run = file_object.read()
+        finally:
+            file_object.close()
+    runFlag.value = False
+
+if __name__ == '__main__':
+    # 检查是否要运行
+    checkRun = threading.Thread(target=checkRunFlag, args=())
+    checkRun.start()
+    
+    xjglWatch = Xjgl(priceIn)
+    module_path = os.path.dirname(__file__)
+        
+    while runFlag.value:
         if now.weekday() ==4:
             xjglWatch.setInitHigh(priceIn*3)
         else:
             xjglWatch.setInitHigh(priceIn)
         #logging.info(datetime.now())
         xjglWatch.WatchXjgl()
-        workTime.relax()
-        file_object = open(filename, 'r')
-        try:
-            flag_run = file_object.read()
-        finally:
-            file_object.close()
+        
+        relaxNow = threading.Thread(target=workTime.relax, args=(runFlag,))
+        relaxNow.start()
+        relaxNow.join()
         
 
