@@ -8,11 +8,11 @@ import getContent
 import WorkInTime
 import threading
 import logging
+import imMail
 
 from multiprocessing import Process, Value
 
 #timeB = [['19:46', '23:00']]
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s -%(message)s')
 
 class xs:
     def __init__(self, name, url, timeB):
@@ -36,20 +36,21 @@ class xs:
         self.__getContent.save(filename, text)
 
     def sendToKindle(self, filename):
-        sendMail.sendMail(filename, filename)
+        sendMail.sendMail(filename, filename, receiver='ming188199@hotmail.com', sendFrom='hotmail')
+        
         self.sendedList.append(filename)  # 送出后更新
         if '第' in filename:
-            #print("更新了")
+            logging.debug("更新了"+filename)
             sendMail.send_attachment_kd(self.__getContent.sub_folder, filename)
 
     def relax(self, alive):
-        relaxNow = threading.Thread(target=self.wk.relax, args=(alive,))
+        relaxNow = threading.Thread(target=self.wk.relax, args=(alive,self.name))
         relaxNow.start()
         relaxNow.join()
 
 
     def checkToday(self):
-        self.sendedList = recMail.checkMailList(30)  # 30 days
+        self.sendedList = imMail.checkMailList('xiaoshuo')
         #logging.info('checking' + self.name)
         try:
             url = self.getUrl()
@@ -93,6 +94,6 @@ class xs:
                             text += eachP + '\r\n'
 
                 # print(text)
-                if len(text) > 89:
-                    self.save(zjName, text)
-                    self.sendToKindle(zjName)
+                self.save(zjName, text)
+                self.sendToKindle(zjName)
+                

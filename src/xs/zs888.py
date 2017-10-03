@@ -9,16 +9,16 @@ from multiprocessing import Process, Value
 import threading
 
 #timeB = [['19:46', '23:00']]
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s -%(message)s')
+logging.basicConfig(level=logging.CRITICAL, format='%(asctime)s - %(levelname)s -%(message)s')
 
 
 #checkToday888(jdtm)
 
 
 def followBook(ith, alive):
-    logging.info('正在追' + xss[ith].name)
 
     while  alive.value:
+        logging.critical('正在追' + xss[ith].name)
         xss[ith].checkToday()
         xss[ith].relax(alive)
 
