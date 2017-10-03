@@ -16,9 +16,9 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s -%(m
 
 
 def followBook(ith, alive):
-    logging.info('正在追' + xss[ith].name)
 
     while  alive.value:
+        logging.info('正在追' + xss[ith].name)
         xss[ith].checkToday()
         xss[ith].relax(alive)
 

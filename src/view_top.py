@@ -22,15 +22,21 @@ class SimpleGridApp(object):
         self.runable = []
         
         self.num_frame = tkinter.Frame()
-        self.num = tkinter.Entry(self.num_frame)
-        self.b = tkinter.Button(self.num_frame, text="setNum", width=10, command=self.numSet)
+        self.num = tkinter.Entry(self.num_frame, width=10)
+        self.b = tkinter.Button(self.num_frame, text="setNum", width=4, command=self.numSet)
+        self.startAllB = tkinter.Button(self.num_frame, text="startAll", width=8, command=self.startAll)
+        self.stopAllB = tkinter.Button(self.num_frame, text="stopAll", width=8, command=self.stopAll)
         self.num.pack(side=LEFT)
         self.b.pack(side=LEFT)
+        self.startAllB.pack(side=LEFT)
+        self.stopAllB.pack(side=LEFT)
         self.num_frame.pack()
         
         self.numSet(len(iniPaths))
         
-        self.startAll()
+        for ith in range(len(iniPaths)):
+            self.__resetText(ith)
+        #self.startAll()
             
     def __resetText(self, ith):
         self.pathsTexts[ith].delete('1.0', "end-1c")
@@ -75,6 +81,7 @@ class SimpleGridApp(object):
         for ith in range(len(iniPaths)):
             self.proStartButton[ith]['state']=tkinter.NORMAL
             self.proStopButton[ith]['state']=tkinter.DISABLED
+            self.__setStop(ith)
             self.runable[ith].value = False
     
     def __getFileName(self, ith):
@@ -164,7 +171,6 @@ class SimpleGridApp(object):
             self.proStartButton[ith]['state']=tkinter.NORMAL
             self.proStopButton[ith]['state']=tkinter.DISABLED
             self.__setStop(ith)
-            #self.process[ith].terminate()
             self.runable[ith].value = False
         return stop
     

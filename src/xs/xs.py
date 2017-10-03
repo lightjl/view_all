@@ -12,7 +12,6 @@ import logging
 from multiprocessing import Process, Value
 
 #timeB = [['19:46', '23:00']]
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s -%(message)s')
 
 class xs:
     def __init__(self, name, url, timeB):
@@ -43,7 +42,7 @@ class xs:
             sendMail.send_attachment_kd(self.__getContent.sub_folder, filename)
 
     def relax(self, alive):
-        relaxNow = threading.Thread(target=self.wk.relax, args=(alive,))
+        relaxNow = threading.Thread(target=self.wk.relax, args=(alive,self.name))
         relaxNow.start()
         relaxNow.join()
 
