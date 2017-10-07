@@ -6,6 +6,7 @@ import account
 from lxml import etree
 import moiveE
 import logging
+import time
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s -%(message)s')
 
@@ -29,6 +30,7 @@ def loginAndDownload():  # 登陆函数
     #print(login_session.status_code)
     #print(_cookies.get_dict())
     url = 'http://www.zimuzu.tv/user/fav'
+    time.sleep(5)
     f = login_session.get(url)
     selector = etree.HTML(f.text)
     # print(selector)

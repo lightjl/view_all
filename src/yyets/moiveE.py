@@ -21,6 +21,9 @@ class moives:
             logging.critical(moiveE.nameEnglish + ' ' + moiveE.nameOrigin)
             self.sendedList.append(moiveE.nameEnglish)
             sendMail.sendMail(moiveE.nameEnglish, moiveE.ed2kLink)#, receiver='presouce@163.com', sendFrom='163')
+    
+    def downloaded(self, nameEnglish):
+        imMail.moveMail(nameEnglish, 'downloading', 'downloaded')
 
 class moiveE:
     def __init__(self, nameOrigin, ed2kLink):
