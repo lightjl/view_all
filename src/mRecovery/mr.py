@@ -24,7 +24,7 @@ def markReaded(emailbox, folder):
 
 def recoveryMail(alive, wk):
     while  alive.value:
-        logging.critical('正在追回收邮件')
+        logging.critical('正在回收邮件')
         eBox = Imbox('imap-mail.outlook.com',
             username=emailAccount.hotname,
             password=emailAccount.hotpass,
@@ -64,7 +64,7 @@ def checkRunFlag():
     runFlag.value = False
 
 if __name__ == '__main__':
-    timeB = [['23:54', '23:59']]
+    timeB = [['23:03', '23:09']]
     wk = WorkInTime.WorkInTime(timeB, 60*10, 11)  # 休息10分钟
     #logging.info(xsPd)
     

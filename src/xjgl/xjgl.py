@@ -61,7 +61,7 @@ now = datetime.now()
 nowDay = now.day
 priceIn = 4.6
 logging.info("现金管理正在运行")
-timeTrade = [['9:29', '11:30'], ['13:00', '15:00']]
+timeTrade = [['9:30', '11:30'], ['13:00', '15:00']]
 workTime = WorkInTime.WorkInTime(timeTrade, weekday='0,1,2,3,4')
 
 
