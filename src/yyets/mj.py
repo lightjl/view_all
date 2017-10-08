@@ -45,8 +45,9 @@ def loginAndDownload():  # 登陆函数
         moives = each.xpath('./div[2]/ul/li')
         for moive in moives:
             name = moive.xpath('./a[1]/span/text()')[0]
-            link = moive.xpath('./div/div/div/a[2]/@href')[0]
-            mv = moiveE.moiveE(name, link)
+            link = moive.xpath('./a[1]/@href')[0]
+            mv = moiveE.moiveE(name, link, login_session)
+            # mv.display()
             myMoives.send(mv)
             # print(moive.xpath('./a[1]/span/text()')[0])
             # print(moive.xpath('./div/div/div/a[2]/@href')[0])
