@@ -94,6 +94,7 @@ class xs:
                             text += eachP + '\r\n'
 
                 # print(text)
-                self.save(zjName, text)
-                self.sendToKindle(zjName)
+                if len(text) > 896:     # 避免下载空文件
+                    self.save(zjName, text)
+                    self.sendToKindle(zjName)
                 
