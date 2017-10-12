@@ -12,6 +12,7 @@ import recMail
 import logging
 from multiprocessing import Process, Value
 import threading
+import imMail
 
 #timeB = [['19:46', '23:00']]
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s -%(message)s')
@@ -22,7 +23,7 @@ class mtime:
         self.wk = WorkInTime.WorkInTime(self.timeB, weekday='3')  # 周四
 
     def checkToday(self):  #
-        self.sendedList = recMail.checkMailList(7)  # 30 days
+        self.sendedList = imMail.checkMailList('dy')  # dy
         url = 'http://movie.mtime.com/recent/#hottest'
         html = requests.get(url)
         selector = etree.HTML(html.text)
@@ -33,7 +34,7 @@ class mtime:
             if num < 0:
                 break
             syrq = each.xpath('div[@class="txtbox"]/p[@class="showday"]//text()')[0]
-            dq = each.xpath('//p[contains(text(),"国家地区：")]/a/text()')[0]
+            dq = each.xpath('.//p[contains(text(),"国家地区：")]/a/text()')[0]
             #dq = each.xpath('div[@class="txtbox"]/p[3]/a/text()')[0]
             #print(each.xpath('div[@class="txtbox"]/h3//text()')[0])
             #print(dq)
@@ -71,7 +72,7 @@ class mtime:
                         jqText += txt + '\n'
                         #print(txt)
                 dym = each.xpath('div[@class="txtbox"]/h3//text()')[0]
-                print(dym)
+                print(dym + ' ' + dq)
                 # print(jqUrl)
                 # print(jqText)
                 # print(syrq)
