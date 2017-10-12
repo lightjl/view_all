@@ -46,7 +46,7 @@ class maiJia:
         if len(text) > 0:
             print(self.name + ' 配送费 ' + str(sendPrice))
             print(linkM + '\n' + text + textmin)
-            sendMail.sendMail('wm: ' + self.name + ' 配送费 ' + str(sendPrice), linkM + '\n' + text)
+            sendMail.sendMail('wm: ' + self.name + ' 配送费 ' + str(sendPrice), linkM + '\n' + text + textmin, changeReceiver=True)
         browser.quit()
             # /div/div/section/header/span
             # ./div/div/section/header/span
