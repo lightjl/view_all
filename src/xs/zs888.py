@@ -17,7 +17,7 @@ logging.basicConfig(level=logging.CRITICAL, format='%(asctime)s - %(levelname)s 
 
 def followBook(ith, alive):
 
-    while  alive.value:
+    while alive.value:
         logging.critical('正在追' + xss[ith].name)
         xss[ith].checkToday()
         xss[ith].relax(alive)
