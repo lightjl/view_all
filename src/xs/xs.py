@@ -36,7 +36,7 @@ class xs:
         self.__getContent.save(filename, text)
 
     def sendToKindle(self, filename):
-        sendMail.sendMail(filename, filename, receiver='ming188199@hotmail.com', sendFrom='hotmail')
+        sendMail.sendMail(filename, 'xs:'+filename, receiver='ming188199@hotmail.com', sendFrom='hotmail')
         
         self.sendedList.append(filename)  # 送出后更新
         if '第' in filename:
