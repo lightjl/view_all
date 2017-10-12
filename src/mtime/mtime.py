@@ -15,7 +15,7 @@ import threading
 import imMail
 
 #timeB = [['19:46', '23:00']]
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s -%(message)s')
+logging.basicConfig(level=logging.CRITICAL, format='%(asctime)s - %(levelname)s -%(message)s')
 
 class mtime:
     def __init__(self):
@@ -72,12 +72,12 @@ class mtime:
                         jqText += txt + '\n'
                         #print(txt)
                 dym = each.xpath('div[@class="txtbox"]/h3//text()')[0]
-                print(dym + ' ' + dq)
+                logging.critical(dym + ' ' + dq)
                 # print(jqUrl)
                 # print(jqText)
                 # print(syrq)
                 sentTxt = '%s\n上映时间%s\n%s\n' %(jqUrl, syrq, jqText)
-                print(sentTxt)
+                logging.critical(sentTxt)
                 if ('电影：'+dym) not in self.sendedList:
                     sendMail.sendMail('电影：'+dym, sentTxt)
 

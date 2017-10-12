@@ -109,7 +109,7 @@ def checkRunFlag():
     runFlag.value = False
     
 if __name__ == '__main__':
-    timeTrade = [['16:00', '16:10']]
+    timeTrade = [['12:00', '12:10']]
     workTime = WorkInTime.WorkInTime(timeTrade, weekday='0,1,2,3,4')
     checkRun = threading.Thread(target=checkRunFlag, args=())
     checkRun.start()

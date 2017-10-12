@@ -54,7 +54,7 @@ class Xjgl(object):
             sub = '逆回购: ' + row['id'] + ' 破 ' + str(self.__highIn) + ', 现价: ' + row['cell']['price']
             self.__highIn = max(self.__highIn * 1.3, rowHigh)
             print(sub)
-            sendMail.sendMail(sub, "")
+            sendMail.sendMail(sub, "", changeReceiver=True)
 
 
 now = datetime.now()
