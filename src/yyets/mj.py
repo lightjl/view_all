@@ -11,7 +11,7 @@ from multiprocessing import Process, Value
 import threading
 import os
 
-logging.basicConfig(level=logging.CRITICAL, format='%(asctime)s - %(levelname)s -%(message)s')
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s -%(message)s')
 
 def loginAndDownload():  # 登陆函数
     header = {
@@ -83,7 +83,7 @@ if __name__ == '__main__':
     checkRun.start()
     timeBucket =[['12:00', '12:10']]
     
-    workTime = WorkInTime.WorkInTime(timeBucket)
+    workTime = WorkInTime.WorkInTime(timeBucket, relaxTime=60*10)
     myMoives = moiveE.moives()
     print("追剧正在进行")
     # while True:

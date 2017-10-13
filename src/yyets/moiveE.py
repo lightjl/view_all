@@ -15,6 +15,7 @@ def is_alphabet(uchar):
 class moives:
     def __init__(self):
         self.sendedList = imMail.checkMailFolderList(['mv', 'downloaded', 'downloading'])
+        logging.debug(self.sendedList)
     
     def send(self, moiveE):
         if (moiveE.nameEnglish in self.sendedList):
