@@ -63,6 +63,18 @@ def checkRunFlag():
             file_object.close()
     runFlag.value = False
 
+def delSent():
+    eBox = Imbox('imap-mail.outlook.com',
+                username=emailAccount.hotname,
+                password=emailAccount.hotpass,
+                ssl=True,
+                ssl_context=None)
+    messages_folder = eBox.messages(folder='Sent')
+    for uid, message in messages_folder:
+    # Every message is an object with the following keys
+        logging.info(message.subject)
+        eBox.delete(uid)
+
 if __name__ == '__main__':
     timeB = [['23:03', '23:09']]
     wk = WorkInTime.WorkInTime(timeB, 60*10, 11)  # 休息10分钟

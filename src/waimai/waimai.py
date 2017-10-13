@@ -11,6 +11,7 @@ from pydoc import browse
 from multiprocessing import Process, Value
 import threading
 import os
+import mr
 
 #timeB = [['19:46', '23:00']]
 
@@ -118,3 +119,4 @@ if __name__ == '__main__':
         relaxNow.start()
         relaxNow.join()
         findMaijia()
+        mr.delSent()    #删除已发送邮件
