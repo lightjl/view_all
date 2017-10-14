@@ -11,7 +11,7 @@ from multiprocessing import Process, Value
 import threading
 import os
 
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s -%(message)s')
+logging.basicConfig(level=logging.CRITICAL, format='%(asctime)s - %(levelname)s -%(message)s')
 
 def loginAndDownload():  # 登陆函数
     header = {
