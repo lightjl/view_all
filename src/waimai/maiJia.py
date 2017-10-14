@@ -2,6 +2,9 @@ import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import sendMail
+import logging
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s -%(message)s')
 
 class maiJia:
     def __init__(self, name, link):
@@ -12,7 +15,9 @@ class maiJia:
         # print(name + ' ' + self.id)
         
     def findFood(self, priceTotal = 50):
-        browser = webdriver.Firefox()
+        # browser = webdriver.Firefox()
+        logging.info('checking ' + self.name)
+        browser = webdriver.PhantomJS()
         baseUrl = 'https://h5.ele.me/shop/#geohash=ws0ed952uqk9&id='
         linkM = baseUrl + str(self.id)
         browser.get(linkM)
@@ -31,18 +36,32 @@ class maiJia:
         textmin = ''
         items = []
         for ith in range(1,4):
+            # /html/body/div[1]/div/div/div[3]/div[2]/main/ul/li[2]
             browser.find_element_by_xpath('/html/body/div[1]/div/div/div[3]/div[2]/main/ul/li[%i]/span' % ith).click()
             time.sleep(3)
             youhuiItems = browser.find_elements_by_xpath('/html/body/div[1]/div/div/div[3]/div[2]/main/section/div[1]/dl[%i]/dd' % ith)
             for youhuiItem in youhuiItems:
                 youhuiItem.send_keys(Keys.DOWN)
-                if (youhuiItem.find_element_by_xpath('./div/div/section/div/span/span').text == '已售完'):
-                    continue
-                nameItem = youhuiItem.find_element_by_xpath('./div/div/section/header/span').text
-                priceItem = youhuiItem.find_element_by_xpath('./div/div/section/strong')
+                try:
+                    # /html/body/div[1]/div/div/div[3]/div[2]/main/section/div[1]/dl[2]/dd[2]/div/section/div[2]/span/span
+                    textStatus = youhuiItem.find_element_by_xpath('./div/section/div[2]/span/span').text
+                    if (textStatus == '已售完'):
+                        continue
+                except:
+                    pass
+                # /html/body/div[1]/div/div/div[3]/div[2]/main/section/div[1]/dl[1]/dd[2]/div/section/p[1]
+                nameItem = youhuiItem.find_element_by_xpath('./div/section/p[1]').text
+                logging.debug(nameItem)
+                # /html/body/div[1]/div/div/div[3]/div[2]/main/section/div[1]/dl[1]/dd[4]/div/section/strong/span
+                # /html/body/div[1]/div/div/div[3]/div[2]/main/section/div[1]/dl[1]/dd[5]/div/section/strong/span
+                # /html/body/div[1]/div/div/div[3]/div[2]/main/section/div[1]/dl[1]/dd[5]/div/section/strong/span
+                priceItem = youhuiItem.find_element_by_xpath('./div/section/strong')
+                logging.debug(priceItem)
                 price = float(priceItem.find_element_by_xpath('./span').text)
                 priceDel = price
                 try:
+                    # /html/body/div[1]/div/div/div[3]/div[2]/main/section/div[1]/dl[2]/dd[2]/div/section/strong/del
+                    # /html/body/div[1]/div/div/div[3]/div[2]/main/section/div[1]/dl[1]/dd[5]/div/section/strong/del
                     priceDel = float(priceItem.find_element_by_xpath('./del').text.replace('¥',''))
                 except:
                     priceDel = price
@@ -76,4 +95,5 @@ class maiJia:
         
         # /html/body/div[1]/div/div/div[3]/div[2]/main/section/div[1]/dl[2]/dd[1]/div/div/section/strong/span
         # /html/body/div[1]/div/div/div[3]/div[2]/main/section/div[1]/dl[2]/dd[1]/div/div/section/strong/del
-        
+
+# maiJia('test', 'https://h5.ele.me/shop/#geohash=ws0ed952uqk9&id=154946185').findFood(46)
