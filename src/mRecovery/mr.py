@@ -7,6 +7,7 @@ import threading
 import WorkInTime
 import emailAccount
 from imbox import Imbox
+import imMail
 
 #timeB = [['19:46', '23:00']]
 logging.basicConfig(level=logging.CRITICAL, format='%(asctime)s - %(levelname)s -%(message)s')
@@ -14,13 +15,6 @@ logging.basicConfig(level=logging.CRITICAL, format='%(asctime)s - %(levelname)s 
 
 #checkToday888(jdtm)
 
-def markReaded(emailbox, folder):
-    
-    messagesToRead = emailbox.messages(folder=folder, unread=True)
-    for uid, message in messagesToRead:
-    # Every message is an object with the following keys
-        logging.info(message.subject)
-        emailbox.mark_seen(uid)
 
 def recoveryMail(alive, wk):
     while  alive.value:
@@ -30,14 +24,10 @@ def recoveryMail(alive, wk):
             password=emailAccount.hotpass,
             ssl=True,
             ssl_context=None)
-        messages_folder = eBox.messages(folder='Inbox')
-        for uid, message in messages_folder:
-        # Every message is an object with the following keys
-            logging.info(message.subject)
-            eBox.delete(uid)
-            # print((message.body)['plain'])
-        markReaded(eBox, 'xiaoshuo')
-        markReaded(eBox, 'nihuigou')
+        imMail.delMail(eBox, 'Inbox')
+        imMail.delMail(eBox, 'Sent')
+        imMail.markReaded(eBox, 'xiaoshuo')
+        imMail.markReaded(eBox, 'nihuigou')
         eBox.logout()
         relaxNow = threading.Thread(target=wk.relax, args=(alive, '邮件回收'))
         relaxNow.start()
@@ -62,18 +52,6 @@ def checkRunFlag():
         finally:
             file_object.close()
     runFlag.value = False
-
-def delSent():
-    eBox = Imbox('imap-mail.outlook.com',
-                username=emailAccount.hotname,
-                password=emailAccount.hotpass,
-                ssl=True,
-                ssl_context=None)
-    messages_folder = eBox.messages(folder='Sent')
-    for uid, message in messages_folder:
-    # Every message is an object with the following keys
-        logging.info(message.subject)
-        eBox.delete(uid)
 
 if __name__ == '__main__':
     timeB = [['23:03', '23:09']]
