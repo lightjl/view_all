@@ -81,7 +81,7 @@ if __name__ == '__main__':
     # 检查是否要运行
     checkRun = threading.Thread(target=checkRunFlag, args=())
     checkRun.start()
-    timeBucket =[['12:00', '12:10']]
+    timeBucket =[['7:00', '7:6'], ['9:00', '9:6'], ['12:00', '12:10'], ['18:00', '18:06']]
     
     workTime = WorkInTime.WorkInTime(timeBucket, relaxTime=60*10)
     myMoives = moiveE.moives()

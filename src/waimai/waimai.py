@@ -124,7 +124,7 @@ if __name__ == '__main__':
     checkRun.start()
     while runFlag.value:
         findMaijia()
-        imMail.delMail(eBox, 'Sent')
+        imMail.delMail(imMail.Ebox(), 'Sent')
         # mr.delSent()    #删除已发送邮件
         relaxNow = threading.Thread(target=workTime.relax, args=(runFlag,'Mtime'))
         relaxNow.start()

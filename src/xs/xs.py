@@ -9,6 +9,7 @@ import WorkInTime
 import threading
 import logging
 import imMail
+import threading
 
 from multiprocessing import Process, Value
 
@@ -36,7 +37,11 @@ class xs:
         self.__getContent.save(filename, text)
 
     def sendToKindle(self, filename):
-        sendMail.sendMail(filename, 'xs:'+filename, receiver='ming188199@hotmail.com', sendFrom='hotmail')
+        sendHotmail = threading.Thread(target=sendMail.sendMail, args=(filename, \
+                'xs:'+filename, 'ming188199@hotmail.com', 'hotmail', False))
+        sendHotmail.start()
+        
+        # sendMail.sendMail(filename, 'xs:'+filename, receiver='ming188199@hotmail.com', sendFrom='hotmail')
         
         self.sendedList.append(filename)  # 送出后更新
         if '第' in filename:
@@ -69,7 +74,7 @@ class xs:
 
 
         zjs = selector.xpath('//a[@rel="nofollow"]')
-        #print(zjs)
+        # print(zjs)
         for zj in zjs:
             zjName = (zj.xpath('./text()')[0])
             # print(zjName)
@@ -94,7 +99,7 @@ class xs:
                             text += eachP + '\r\n'
 
                 # print(text)
-                if len(text) > 896:     # 避免下载空文件
+                if len(text) > 89:     # 避免下载空文件
                     self.save(zjName, text)
                     self.sendToKindle(zjName)
                 
