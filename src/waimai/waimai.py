@@ -48,7 +48,7 @@ def findMaijia():
     browser.find_element_by_xpath('/html/body/div/div[1]/div/aside/div/a[3]').click()
     time.sleep(2)
     # 品牌商家
-    browser.find_element_by_xpath('/html/body/div/div[1]/div/aside/section[3]/div[1]/dl[4]/dd[1]').click()
+    browser.find_element_by_xpath('/html/body/div/div[1]/div/aside/section[3]/div[1]/dl[4]/dd[1]/div[1]').click()
     browser.maximize_window()
     time.sleep(2)
     browser.find_element_by_xpath('/html/body/div/div[1]/div/aside/section[3]/div[2]/a[2]').click()
