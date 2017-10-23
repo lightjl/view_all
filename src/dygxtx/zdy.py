@@ -48,7 +48,8 @@ def checkBtDy(dyWait):  #
         dyWait.check(moiveName, link)
     # print(f.content.decode())
 
-    logging.critical('wait moive(s)')
+    logging.critical('wait moive(s):' )
+    logging.critical(dyWait.nameList)
 
 runFlag = Value('b', True)
 
@@ -94,3 +95,5 @@ if __name__ == '__main__':
             logging.critical('no moives wait!')
         else:
             checkBtDy(dyWait)
+            
+            
