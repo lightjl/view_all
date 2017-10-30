@@ -28,6 +28,21 @@ def login():
     browser.find_element_by_xpath('//*[@id="TANGRAM__PSP_4__submit"]').click()
     time.sleep(6)
     
+def knowButtonClick(browser):
+    try:
+        browser.find_element_by_xpath('//div[@id="dialog1"]/div[2]/div/div[2]/span').click()
+        time.sleep(1)
+    except:
+        return
+    
+def overDownloadNum(browser):
+    time.sleep(4)
+    try:
+        browser.find_element_by_xpath('//div[@id="downloadVerify"]/div[1]')
+        return True
+    except:
+        return False
+            
 
 def download():
     moives = moiveE.Moives()
@@ -38,6 +53,7 @@ def download():
     input('login youself!')
     browser.get('https://pan.baidu.com/disk/home?#list/vmode=list&path=%2Fmoive')
     time.sleep(6)
+    knowButtonClick(browser)
     # 离线下载
     browser.find_element_by_xpath('//a[@data-button-id="b13"]').click()
     downloadNum = 0
@@ -50,7 +66,9 @@ def download():
             time.sleep(1)
             browser.find_element_by_xpath('//*[@id="share-offline-link"]').send_keys(moive.downloadLink)
             browser.find_element_by_xpath('//*[@id="newoffline-dialog"]/div[3]/a[2]').click()
-            time.sleep(9)
+            if(overDownloadNum(browser)):
+                break
+            time.sleep(6)
             # //*[@id="OfflineListView"]/dd[1]/div[3]/span[2]
             status = browser.find_element_by_xpath('//*[@id="OfflineListView"]/dd[1]/div[3]/span[2]')
             if (status.text == '下载成功'):
@@ -68,7 +86,9 @@ def download():
             browser.find_element_by_xpath('//*[@id="newoffline-dialog"]/div[3]/a[2]').click()
             time.sleep(9)
             browser.find_element_by_xpath('//*[@id="offlinebtlist-dialog"]/div[3]/a[2]/span').click()
-            time.sleep(9)
+            if(overDownloadNum(browser)):
+                break
+            time.sleep(6)
             # //*[@id="OfflineListView"]/dd[1]/div[3]/span[2]
             status = browser.find_element_by_xpath('//*[@id="OfflineListView"]/dd[1]/div[3]/span[2]')
             if (status.text == '下载成功'):
@@ -77,6 +97,7 @@ def download():
             downloadNum += 1
             if downloadNum >= downloadTotal:
                 break
+    browser.quit()
         
     '''
     # link
