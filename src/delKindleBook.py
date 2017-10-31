@@ -11,7 +11,7 @@ password = input('password:')
 (browser.find_element_by_id("ap_password")).send_keys(password)
 (browser.find_element_by_id("signInSubmit")).click()
 
-
+browser.get('https://www.amazon.cn/mn/dcw/myx.html/ref=kinw_myk_redirect#/home/content/pdocs/dateDsc/')
 browser.get('https://www.amazon.cn/mn/dcw/myx.html/ref=kinw_myk_redirect#/home/content/pdocs/dateDsc/%E7%AC%AC')
 input('搜索好了？：')
 
