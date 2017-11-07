@@ -10,6 +10,7 @@ import threading
 import logging
 import imMail
 import threading
+import sendShouqu
 
 from multiprocessing import Process, Value
 
@@ -100,6 +101,8 @@ class xs:
 
                 # print(text)
                 if len(text) > 89:     # 避免下载空文件
+                    ss = sendShouqu.SendShouqu()
+                    ss.send(zjHref)
                     self.save(zjName, text)
                     self.sendToKindle(zjName)
                 
