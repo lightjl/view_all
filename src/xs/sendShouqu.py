@@ -35,6 +35,3 @@ class SendShouqu:
     def quit(self):
         self.browser.quit()
         
-ss = SendShouqu()
-ss.send('http://www.sodu3.com/chapter.php?bid=321029&cid=13712015')
-ss.send('https://blog.mimvp.com/article/3139.html')
