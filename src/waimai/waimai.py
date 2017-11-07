@@ -31,7 +31,8 @@ def pinpai(browser):
     dians = browser.find_elements_by_xpath('/html/body/div/ul/section')
     diansList = []
     for dian in dians:
-        name = dian.find_element_by_xpath('./div[2]/section[1]/h3/span').text
+        # /html/body/div/ul/section[1]/div[1]/div[2]/section[1]/h3/span
+        name = dian.find_element_by_xpath('./div[1]/div[2]/section[1]/h3/span').text
         diansList.append(name)
     return diansList
     
