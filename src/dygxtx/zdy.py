@@ -83,6 +83,7 @@ if __name__ == '__main__':
     workTime = WorkInTime.WorkInTime(timeBucket, relaxTime=60*10)
     
     while runFlag.value:
+        
         relaxNow = threading.Thread(target=workTime.relax, args=(runFlag,))
         relaxNow.start()
         relaxNow.join()
@@ -95,5 +96,4 @@ if __name__ == '__main__':
             logging.critical('no moives wait!')
         else:
             checkBtDy(dyWait)
-            
             

@@ -41,10 +41,13 @@ class MoiveWait():
             
             for li in lis:
                 # //*[@id="nucms_downlist"]/div/ul/li[1] /a
-                sizeStr = li.find_element_by_xpath('./a').get_attribute('title').split('[')[1].split(']')[0]
-                if ('G' not in sizeStr):    # 大小不是GB 级别
-                    continue
-                size = float(sizeStr.split('G')[0])
+                try:
+                    sizeStr = li.find_element_by_xpath('./a').get_attribute('title').split('[')[1].split(']')[0]
+                    if ('G' not in sizeStr):    # 大小不是GB 级别
+                        continue
+                    size = float(sizeStr.split('G')[0])
+                except:
+                    size = 99
                 if (size < minSize):
                     minSize = size
                     logging.debug(size)
