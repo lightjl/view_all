@@ -21,7 +21,6 @@ class xs:
         self.name = name
         self.__url = url
         self.__getContent = getContent.saveToFile('xs')
-        self.zjUrlHead = 'http://www.sodu888.com'
         self.timeB = timeB
         self.timeB.append(['23:59'] * 2)
         #print(self.timeB)
@@ -37,9 +36,9 @@ class xs:
     def save(self, filename, text):
         self.__getContent.save(filename, text)
 
-    def sendToKindle(self, filename):
+    def sendToKindle(self, filename, url=''):
         sendHotmail = threading.Thread(target=sendMail.sendMail, args=(filename, \
-                'xs:'+filename, 'ming188199@hotmail.com', 'hotmail', False))
+                'xs:'+filename+'\n'+url, 'ming188199@hotmail.com', 'hotmail', False))
         sendHotmail.start()
         
         # sendMail.sendMail(filename, 'xs:'+filename, receiver='ming188199@hotmail.com', sendFrom='hotmail')
@@ -54,33 +53,19 @@ class xs:
         relaxNow.start()
         relaxNow.join()
 
-
-    def checkToday(self):
-        self.sendedList = imMail.checkMailList('xiaoshuo')
-        #logging.info('checking' + self.name)
-        try:
-            url = self.getUrl()
-            html = requests.get(url)
-            selector = etree.HTML(html.text)
-        except:
-            return
-        #print(html.text)
-        gxsj = selector.xpath('//td[@class="time"]/text()')
-
-        if (len(gxsj) == 0):
-            return
-
-        #zjs = selector.xpath('//a[@rel="nofollow"]/text()')
-        #print(zjs)
-
-
+    def sendShouqu(self, link):
+        ss = sendShouqu.SendShouqu()
+        ss.send(link)
+        
+    def sodu888(self, selector):
+        zjUrlHead = 'http://www.sodu888.com'
         zjs = selector.xpath('//a[@rel="nofollow"]')
         # print(zjs)
         for zj in zjs:
             zjName = (zj.xpath('./text()')[0])
             # print(zjName)
 
-            zjHref = self.zjUrlHead + (zj.xpath('./@href')[0])
+            zjHref = zjUrlHead + (zj.xpath('./@href')[0])
             # print(zjHref)
             if zjName not in self.sendedList:
                 try:
@@ -101,8 +86,67 @@ class xs:
 
                 # print(text)
                 if len(text) > 89:     # 避免下载空文件
-                    ss = sendShouqu.SendShouqu()
-                    ss.send(zjHref)
+                    ss = threading.Thread(target=self.sendShouqu, args=(zjHref,))
                     self.save(zjName, text)
-                    self.sendToKindle(zjName)
+                    self.sendToKindle(zjName, zjHref)
+                    
+                    
+    def sodu(self, selector):
+        zjs = selector.xpath('//div[@class="main-html"]')
+        for zj in zjs:
+            # /html/body/div[6]/div[1]/a
+            zjName = (zj.xpath('./div[1]/a/text()')[0])
+            if (zjName[-1] == '('):
+                zjName = zjName[:-1]
+            # print(zjName)
+
+            zjHref = (zj.xpath('./div[1]/a/@href')[0])
+            zjHref = zjHref.split('url=')[1]
+            # print(zjHref)
+            if zjName not in self.sendedList:
+                try:
+                    html = requests.get(zjHref)
+                except:
+                    continue
+                html.encoding = 'utf-8'
+                selector = etree.HTML(html.content)
+
+                divs = (selector.xpath('//div[@id]'))
+                text = ''
+                for div in divs:
+                    id = (div.xpath('@id'))[0]
+                    if id == 'content' or id == 'contents' or id == 'txtContent':
+                        # print(div.xpath('//text()'))
+                        for eachP in (div.xpath('./text()')):
+                            text += eachP + '\r\n'
+
+                # print(text)
+                if len(text) > 89:     # 避免下载空文件
+                    ss = threading.Thread(target=self.sendShouqu, args=(zjHref,))
+                    ss.start()
+                    # 
+                    self.save(zjName, text)
+                    self.sendToKindle(zjName, zjHref)
+        
+    def checkToday(self):
+        self.sendedList = imMail.checkMailList('xiaoshuo')
+        #logging.info('checking' + self.name)
+        # logging.critical(self.getUrl())
+        try:
+            url = self.getUrl()
+            html = requests.get(url)
+            selector = etree.HTML(html.text)
+        except:
+            return
+        #print(html.text)
+        
+        #zjs = selector.xpath('//a[@rel="nofollow"]/text()')
+        #print(zjs)
+
+        # /html/body/div[6]
+        if ("cc" in self.name):
+            self.sodu(selector)
+        elif("sodu3" in url or "sodu888" in url):
+            self.sodu888(selector)
+            
                 

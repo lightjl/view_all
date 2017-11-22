@@ -7,6 +7,7 @@ import time
 INTERPRETER = "python"
 from multiprocessing import Process, Value
 import threading
+import sendShouqu
 
 #timeB = [['19:46', '23:00']]
 logging.basicConfig(level=logging.CRITICAL, format='%(asctime)s - %(levelname)s -%(message)s')
