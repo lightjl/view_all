@@ -11,6 +11,13 @@ def is_alphabet(uchar):
         return True
     else:
         return False
+    
+def is_punctuations(uchar):
+    punctuations_list = ['.', '-', '\'']
+    if (uchar in punctuations_list):
+        return True
+    else:
+        return False
 
 class moives:
     def __init__(self):
@@ -44,7 +51,7 @@ class moiveE:
             if(is_alphabet(i)):
                 nameBegin = True
             if nameBegin:
-                if(i.isdigit() or is_alphabet(i) or i == '.' or i == '-'):
+                if(i.isdigit() or is_alphabet(i) or is_punctuations(i)):
                     nameEnglish += i
                 else:
                     break
