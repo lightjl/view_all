@@ -18,6 +18,7 @@ class SendShouqu:
         self.browser.find_element_by_xpath('//*[@id="btn_login"]').click()
         time.sleep(4)
         
+    # todo fix
     def send(self, link):
         # self.browser = webdriver.Firefox()
         self.browser = webdriver.PhantomJS()
