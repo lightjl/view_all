@@ -7,6 +7,10 @@ from selenium import webdriver
 import pandas as pd
 import os
 
+from selenium.webdriver.common.keys import Keys
+
+# logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s -%(message)s')
+
 # 判断一个unicode是否是英文字母
 def is_alphabet(uchar):         
     if ('\u0041' <= uchar<='\u005a') or ('\u0061' <= uchar<='\u007a'):
@@ -37,8 +41,14 @@ class MoiveWait():
         minSize = 999
         # //*[@id="nucms_downlist"]/div[1]
         for plist in plists:
+            plist.send_keys(Keys.DOWN)
             lis = plist.find_elements_by_xpath('./ul/li')
-            
+            checkPartName = plist.find_element_by_xpath('./h2').text
+            logging.debug("now check" + checkPartName)
+            if not plist.find_element_by_xpath('./h2').text[0].isnumeric() : 
+                # 非 720/1080 p下载地址
+                continue
+            # //*[@id="nucms_downlist"]/div[3]/h2
             for li in lis:
                 # //*[@id="nucms_downlist"]/div/ul/li[1] /a
                 try:
@@ -90,6 +100,7 @@ class Moives:
         if(dyName in self.nameList):
             for moive in self.moiveList:
                 if(moive.dyName == dyName):
+                    logging.critical(dyName + " found")
                     logging.debug(self.dyPd.loc[self.dyPd['name'] == dyName , 'foundFlag'])
                     self.dyPd.loc[self.dyPd['name'] == dyName , 'foundFlag'] = 'T'
                     self.sendMail(moive, link)
