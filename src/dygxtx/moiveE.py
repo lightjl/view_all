@@ -86,7 +86,7 @@ class Moives:
         logging.info('mv: ' + moiveWait.dyName)
         logging.info(moiveWait.DownloadLink(link))
         sendMail.sendMail('mv: ' + moiveWait.dyName, moiveWait.DownloadLink(link))#, receiver='presouce@163.com', sendFrom='163')
-        if (moiveWait.receiver == moiveWait.receiver):
+        if (moiveWait.receiver == moiveWait.receiver):  # 收件人不为空
             sendMail.sendMail('mv: ' + moiveWait.dyName, moiveWait.DownloadLink(link), receiver=moiveWait.receiver, sendFrom='163')
         else:
             logging.debug('only send to myself')
