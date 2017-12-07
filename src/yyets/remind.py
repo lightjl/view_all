@@ -47,11 +47,11 @@ def remind():
     checkRun.start()
     timeBucket =[['15:01', '15:06']]
     workTime = WorkInTime.WorkInTime(timeBucket, relaxTime=60*40)
-    logging.critical('reminding mv')
     
     while runFlag.value:
         relaxNow = threading.Thread(target=workTime.relax, args=(runFlag,))
         relaxNow.start()
         relaxNow.join()
+        logging.critical('reminding mv')
         checkMV()
     logging.critical('remind stopped')
