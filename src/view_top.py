@@ -149,16 +149,21 @@ class SimpleGridApp(object):
         logging.info(self.runable)
     
     def restart(self, ith):
+        self.waitStop(ith)
+        self.start(ith)
+        
+    def waitStop(self, ith):
         while self.runState[ith] == True:
             time.sleep(5)
-        self.start(ith)
+        self.proStartButton[ith]['state']=tkinter.NORMAL
         self.proReStartButton[ith]['state']=tkinter.NORMAL
     
     def onReStart(self, ith):
         def reStart():
             self.proReStartButton[ith]['state']=tkinter.DISABLED
-            logging.info('%i restart ' % ith)
+            # logging.info('%s restart ' % self.__getFileName(ith))
             self.stop(ith)
+            self.proStartButton[ith]['state']=tkinter.DISABLED
             
             restartThread = threading.Thread(target=self.restart, args=(ith,))
             restartThread.start()
@@ -175,7 +180,7 @@ class SimpleGridApp(object):
         return click
     
     def start(self, ith):
-        logging.info('%i start1' % ith)
+        # logging.info('%i start1' % ith)
         if len(self.__getPath(ith)) != 0:
             self.paths[ith] = (self.__getPath(ith))
         self.__resetText(ith)
@@ -191,7 +196,7 @@ class SimpleGridApp(object):
     
     def onStart(self, ith):
         def start():
-            logging.info('%i start1' % ith)
+            #logging.info('%s start' % self.__getFileName(ith))
             if len(self.__getPath(ith)) != 0:
                 self.paths[ith] = (self.__getPath(ith))
             self.__resetText(ith)
@@ -208,7 +213,7 @@ class SimpleGridApp(object):
         return start
     
     def stop(self, ith):
-        logging.info('%i stop' % ith)
+        logging.info('%s stoping' % self.__getFileName(ith))
         self.proStartButton[ith]['state']=tkinter.NORMAL
         self.proStopButton[ith]['state']=tkinter.DISABLED
         self.__setStop(ith)
@@ -216,9 +221,11 @@ class SimpleGridApp(object):
         
     def onStop(self, ith):
         def stop():
-            logging.info('%i stop' % ith)
-            self.proStartButton[ith]['state']=tkinter.NORMAL
+            logging.info('%s stoping' % self.__getFileName(ith))
+            waitStopThread = threading.Thread(target=self.waitStop, args=(ith,))
+            waitStopThread.start()
             self.proStopButton[ith]['state']=tkinter.DISABLED
+            self.proReStartButton[ith]['state']=tkinter.DISABLED
             self.__setStop(ith)
             self.runable[ith].value = False
         return stop
