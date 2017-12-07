@@ -10,6 +10,7 @@ import time
 from multiprocessing import Process, Value
 import threading
 import os
+import remind
 
 logging.basicConfig(level=logging.CRITICAL, format='%(asctime)s - %(levelname)s -%(message)s')
 
@@ -44,6 +45,11 @@ def loginAndDownload():  # 登陆函数
     
     # /html/body/div[4]/div/div/div[2]/div/ul/li[2]/div[2]/ul/li[1]/a[1]/span
     content_field = selector.xpath('//li[@class="clearfix"]')
+    if (len(content_field) == 0):
+        logging.critical("check mv failed!!!!!!!!!!!")
+        myMoives.checkFailedNotice()
+        runFlag.value = False
+        
     for each in content_field:
         moives = each.xpath('./div[2]/ul/li')
         for moive in moives:
@@ -55,7 +61,7 @@ def loginAndDownload():  # 登陆函数
             # print(moive.xpath('./div/div/div/a[2]/@href')[0])
     # print(f.content.decode())
 
-    print('well done')
+    logging.critical('well done')
 
 runFlag = Value('b', True)
 
@@ -84,7 +90,9 @@ if __name__ == '__main__':
     
     workTime = WorkInTime.WorkInTime(timeBucket, relaxTime=60*10)
     myMoives = moiveE.moives()
-    print("追剧正在进行")
+    logging.critical("following mv")
+    remindThread = threading.Thread(target=remind.remind)
+    remindThread.start()
     # while True:
         #downloaded = checkDownloaded.checkDownloaded()
     while runFlag.value:

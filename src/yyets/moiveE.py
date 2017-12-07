@@ -30,6 +30,9 @@ class moives:
             self.sendedList.append(moiveE.nameEnglish)
             sendMail.sendMail(moiveE.nameEnglish, moiveE.ed2kLink)#, receiver='presouce@163.com', sendFrom='163')
     
+    def checkFailedNotice(self):
+        sendMail.sendmail("check mv failed!!!!!!!!!!!", "check mv failed!!!!!!!!!!!")
+    
     def downloaded(self, nameEnglish):
         imMail.moveMail(nameEnglish, 'downloading', 'downloaded')
 
