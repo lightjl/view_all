@@ -20,7 +20,7 @@ def checkMV():
     text = ''
     for name in mvList:
         text += name + '\n'
-    sendMail.sendMail(str(len(mvList)) + 'moive(s) unread in MV', text)
+    sendMail.sendMail(str(len(mvList)) + ' moive(s) unread in MV', text)
     return
 
 runFlag = Value('b', True)

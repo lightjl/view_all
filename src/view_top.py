@@ -6,6 +6,7 @@ import os
 import threading
 from time import sleep
 import pandas as pd
+import time
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s -%(message)s')
 
@@ -93,12 +94,14 @@ class SimpleGridApp(object):
     def subProcess(self, ith, alive):
         cmd = 'python3 ' + self.__getFileName(ith)
         logging.info('%i: %s start' % (ith, cmd))
+        self.runState[ith] = True
         #os.system(cmd)
         #os.system(r'python C:\Users\jlgs-jz\git\gzr\zs888.py')    
         while alive.value:
             os.system(cmd)
             
         logging.info('%i: %s stoped' % (ith, cmd))
+        self.runState[ith] = False
         
         
     def numSet(self, iniNum = 0):
@@ -114,13 +117,16 @@ class SimpleGridApp(object):
         if (len_already >= self.numProcess):
             return
         logging.info('ini %i' % (iniNum))
+        self.runState = []
         for i in range(len_already, self.numProcess):
             process_frame = tkinter.Frame()
             #check_button = tkinter.Checkbutton(process_frame)
+            prestr = tkinter.Button(process_frame, text="restart", command=self.onReStart(i))
             path = tkinter.Text(process_frame, height=1, width=20)
             path_set = tkinter.Button(process_frame, text="set", command=self.onSet(i))
             pstr = tkinter.Button(process_frame, text="start", command=self.onStart(i))
             pstp = tkinter.Button(process_frame, text="stop", command=self.onStop(i), state=tkinter.DISABLED)
+            prestr.pack(side=LEFT)
             path.pack(side=LEFT)
             path_set.pack(side=LEFT)
             pstr.pack(side=LEFT)
@@ -134,10 +140,27 @@ class SimpleGridApp(object):
             self.proStartButton.append(pstr)
             self.proStopButton.append(pstp)
             self.runable.append(Value('b', False))
+            self.runState.append(False)
             #self.pathsEntry[i]['text'] = self.paths[i]
             
             self.process.append(threading.Thread(target=self.subProcess, args=(i, self.runable[i])))
         logging.info(self.runable)
+    
+    def restart(self, ith):
+        while self.runState[ith] == True:
+            time.sleep(5)
+        self.start(ith)
+    
+    def onReStart(self, ith):
+        def reStart():
+            logging.info('%i restart ' % ith)
+            self.stop(ith)
+            
+            restartThread = threading.Thread(target=self.restart, args=(ith,))
+            restartThread.start()
+            
+            #self.process[ith].start()
+        return reStart
     
     def onSet(self, ith):
         def click():
@@ -147,6 +170,20 @@ class SimpleGridApp(object):
             logging.info('%i set, path = %s' % (ith, self.paths[ith]))
         return click
     
+    def start(self, ith):
+        logging.info('%i start1' % ith)
+        if len(self.__getPath(ith)) != 0:
+            self.paths[ith] = (self.__getPath(ith))
+        self.__resetText(ith)
+        self.__setRun(ith)
+        #self.process[ith] = Process(target=self.subProcess, args=(ith,))
+        self.process[ith] = threading.Thread(target=self.subProcess, args=(ith, self.runable[ith]))
+        #logging.info(self.runable)
+        
+        self.proStartButton[ith]['state']=tkinter.DISABLED
+        self.proStopButton[ith]['state']=tkinter.NORMAL
+        self.runable[ith].value = True
+        self.process[ith].start()
     
     def onStart(self, ith):
         def start():
@@ -166,8 +203,16 @@ class SimpleGridApp(object):
             #self.process[ith].start()
         return start
     
+    def stop(self, ith):
+        logging.info('%i stop' % ith)
+        self.proStartButton[ith]['state']=tkinter.NORMAL
+        self.proStopButton[ith]['state']=tkinter.DISABLED
+        self.__setStop(ith)
+        self.runable[ith].value = False
+        
     def onStop(self, ith):
         def stop():
+            logging.info('%i stop' % ith)
             self.proStartButton[ith]['state']=tkinter.NORMAL
             self.proStopButton[ith]['state']=tkinter.DISABLED
             self.__setStop(ith)
@@ -183,6 +228,8 @@ if __name__ == '__main__':
     iniPaths = []
     for row in iniPathsPd:
         #print(row[1])
+        if (row[0] != 0):
+            continue
         iniPaths.append(row[1])
     
     top = tkinter.Tk()
