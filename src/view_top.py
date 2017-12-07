@@ -16,6 +16,7 @@ class SimpleGridApp(object):
         self.paths = iniPaths
         self.pathsTexts = []
         self.path_sets = []
+        self.proReStartButton = []
         self.proStartButton = []
         self.proStopButton = []
         self.texts = []
@@ -135,7 +136,8 @@ class SimpleGridApp(object):
             process_frame.pack()
             if iniNum == 0:
                 self.paths.append('')
-                
+            
+            self.proReStartButton.append(prestr)
             self.pathsTexts.append(path)
             self.proStartButton.append(pstr)
             self.proStopButton.append(pstp)
@@ -150,9 +152,11 @@ class SimpleGridApp(object):
         while self.runState[ith] == True:
             time.sleep(5)
         self.start(ith)
+        self.proReStartButton[ith]['state']=tkinter.NORMAL
     
     def onReStart(self, ith):
         def reStart():
+            self.proReStartButton[ith]['state']=tkinter.DISABLED
             logging.info('%i restart ' % ith)
             self.stop(ith)
             
