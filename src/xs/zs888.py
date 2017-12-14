@@ -20,8 +20,7 @@ def followBook(ith, alive):
 
     while alive.value:
         logging.critical('正在追' + xss[ith].name)
-        xss[ith].checkToday()
-        xss[ith].relax(alive)
+        xss[ith].work(alive)
 
 
 runFlag = Value('b', True)

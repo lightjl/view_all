@@ -48,60 +48,42 @@ class xs:
             logging.debug("更新了"+filename)
             sendMail.send_attachment_kd(self.__getContent.sub_folder, filename)
 
-    def relax(self, alive):
+
+    def work(self, alive):
         relaxNow = threading.Thread(target=self.wk.relax, args=(alive,self.name))
         relaxNow.start()
+        self.checkToday()
         relaxNow.join()
-
+        
     def sendShouqu(self, link):
         ss = sendShouqu.SendShouqu()
         ss.send(link)
         
-    def sodu888(self, selector):
-        zjUrlHead = 'http://www.sodu888.com'
-        zjs = selector.xpath('//a[@rel="nofollow"]')
-        # print(zjs)
-        for zj in zjs:
-            zjName = (zj.xpath('./text()')[0])
-            # print(zjName)
-
-            zjHref = zjUrlHead + (zj.xpath('./@href')[0])
-            # print(zjHref)
-            if zjName not in self.sendedList:
-                try:
-                    html = requests.get(zjHref)
-                except:
-                    continue
-                html.encoding = 'utf-8'
-                selector = etree.HTML(html.content)
-
-                divs = (selector.xpath('//div[@id]'))
-                text = ''
-                for div in divs:
-                    id = (div.xpath('@id'))[0]
-                    if id == 'content' or id == 'contents' or id == 'txtContent':
-                        # print(div.xpath('//text()'))
-                        for eachP in (div.xpath('./text()')):
-                            text += eachP + '\r\n'
-
-                # print(text)
-                if len(text) > 89:     # 避免下载空文件
-                    ss = threading.Thread(target=self.sendShouqu, args=(zjHref,))
-                    self.save(zjName, text)
-                    self.sendToKindle(zjName, zjHref)
-                    
-                    
-    def sodu(self, selector):
-        zjs = selector.xpath('//div[@class="main-html"]')
+    def getZjName(self, webSite, zj):
+        zjName = ''
+        if webSite == '888':
+            zjName =  (zj.xpath('./text()')[0])
+        elif webSite == 'sodu':
+            zjName =  (zj.xpath('./div[1]/a/text()')[0])
+        if (zjName[-1] == '('):#（((
+            zjName = zjName[:-1]
+        zjName = zjName.split('（')[0]
+        return zjName
+        
+    def getZjUrl(self, webSite, zj):
+        if webSite == '888':
+            return (zj.xpath('./@href')[0])
+        elif webSite == 'sodu':
+            zjHref = zj.xpath('./div[1]/a/@href')[0]
+            return zjHref.split('url=')[1]
+        
+    def doWith_zj(self, zjs, zjUrlHead, webSite):
         for zj in zjs:
             # /html/body/div[6]/div[1]/a
-            zjName = (zj.xpath('./div[1]/a/text()')[0])
-            if (zjName[-1] == '('):
-                zjName = zjName[:-1]
+            zjName = self.getZjName(webSite, zj)
             # print(zjName)
 
-            zjHref = (zj.xpath('./div[1]/a/@href')[0])
-            zjHref = zjHref.split('url=')[1]
+            zjHref = zjUrlHead + self.getZjUrl(webSite, zj)
             # print(zjHref)
             if zjName not in self.sendedList:
                 try:
@@ -127,6 +109,19 @@ class xs:
                     # 
                     self.save(zjName, text)
                     self.sendToKindle(zjName, zjHref)
+        
+    def sodu888(self, selector):
+        zjs = selector.xpath('//a[@rel="nofollow"]')
+        zjUrlHead = 'http://www.sodu888.com'
+        # print(zjs)
+        self.doWith_zj(zjs, zjUrlHead, '888')
+                    
+                    
+    def sodu(self, selector):
+        zjs = selector.xpath('//div[@class="main-html"]')
+        zjUrlHead = ''
+        self.doWith_zj(zjs, zjUrlHead, 'sodu')
+        
         
     def checkToday(self):
         self.sendedList = imMail.checkMailList('xiaoshuo')
