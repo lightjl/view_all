@@ -97,7 +97,7 @@ class xs:
                 text = ''
                 for div in divs:
                     id = (div.xpath('@id'))[0]
-                    if id == 'content' or id == 'contents' or id == 'txtContent':
+                    if id == 'content' or id == 'contents' or id == 'txtContent' or id == 'BookText':
                         # print(div.xpath('//text()'))
                         for eachP in (div.xpath('./text()')):
                             text += eachP + '\r\n'
