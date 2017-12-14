@@ -70,6 +70,8 @@ class SimpleGridApp(object):
     
     def startAll(self):
         for ith in range(len(iniPaths)):
+            if self.runState[ith] == True:
+                continue
             self.process[ith] = threading.Thread(target=self.subProcess, args=(ith, self.runable[ith]))
             self.__resetText(ith)
             self.__setRun(ith)
@@ -81,10 +83,7 @@ class SimpleGridApp(object):
         
     def stopAll(self):
         for ith in range(len(iniPaths)):
-            self.proStartButton[ith]['state']=tkinter.NORMAL
-            self.proStopButton[ith]['state']=tkinter.DISABLED
-            self.__setStop(ith)
-            self.runable[ith].value = False
+            self.stop(ith)
     
     def __getFileName(self, ith):
         if self.paths[ith][0] == '.':
@@ -213,11 +212,13 @@ class SimpleGridApp(object):
         return start
     
     def stop(self, ith):
-        logging.info('%s stoping' % self.__getFileName(ith))
-        self.proStartButton[ith]['state']=tkinter.NORMAL
-        self.proStopButton[ith]['state']=tkinter.DISABLED
-        self.__setStop(ith)
-        self.runable[ith].value = False
+            logging.info('%s stoping' % self.__getFileName(ith))
+            waitStopThread = threading.Thread(target=self.waitStop, args=(ith,))
+            waitStopThread.start()
+            self.proStopButton[ith]['state']=tkinter.DISABLED
+            self.proReStartButton[ith]['state']=tkinter.DISABLED
+            self.__setStop(ith)
+            self.runable[ith].value = False
         
     def onStop(self, ith):
         def stop():
