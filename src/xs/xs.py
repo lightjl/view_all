@@ -30,11 +30,8 @@ class xs:
     def getUrl(self):
         return self.__url
 
-    def isSave(self, filename):
-        return self.__getContent.isSended(filename)
-
-    def save(self, filename, text):
-        self.__getContent.save(filename, text)
+    def save(self, filename, text, size=5):
+        return self.__getContent.save(filename, text, size)
 
     def sendToKindle(self, filename, url=''):
         sendHotmail = threading.Thread(target=sendMail.sendMail, args=(filename, \
@@ -55,7 +52,7 @@ class xs:
         self.checkToday()
         relaxNow.join()
         
-    def sendShouqu(self, link):
+    def sendShouqu(self, link):     #todo fix
         ss = sendShouqu.SendShouqu()
         ss.send(link)
         
@@ -104,11 +101,10 @@ class xs:
 
                 # print(text)
                 if len(text) > 89:     # 避免下载空文件
-                    ss = threading.Thread(target=self.sendShouqu, args=(zjHref,))
-                    ss.start()
-                    # 
-                    self.save(zjName, text)
-                    self.sendToKindle(zjName, zjHref)
+                    #ss = threading.Thread(target=self.sendShouqu, args=(zjHref,))
+                    #ss.start()
+                    if (self.save(zjName, text, 5)):
+                        self.sendToKindle(zjName, zjHref)
         
     def sodu888(self, selector):
         zjs = selector.xpath('//a[@rel="nofollow"]')
