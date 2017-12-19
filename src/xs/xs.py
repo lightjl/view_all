@@ -40,7 +40,6 @@ class xs:
         
         # sendMail.sendMail(filename, 'xs:'+filename, receiver='ming188199@hotmail.com', sendFrom='hotmail')
         
-        self.sendedList.append(filename)  # 送出后更新
         if '第' in filename:
             logging.debug("更新了"+filename)
             sendMail.send_attachment_kd(self.__getContent.sub_folder, filename)
@@ -105,6 +104,10 @@ class xs:
                     #ss.start()
                     if (self.save(zjName, text, 5)):
                         self.sendToKindle(zjName, zjHref)
+                        self.sendedList.append(zjName)  # 送出后更新
+                    elif '第' not in zjName: # 非小说章节
+                        self.sendToKindle(zjName, zjHref)
+                        self.sendedList.append(zjName)  # 送出后更新
         
     def sodu888(self, selector):
         zjs = selector.xpath('//a[@rel="nofollow"]')
