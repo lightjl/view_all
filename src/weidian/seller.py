@@ -6,8 +6,7 @@ import logging
 import requests
 from lxml import etree
 import re
-
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s -%(message)s')
+import imMail
 
 class Seller:
     def __init__(self, name, link):
@@ -39,36 +38,59 @@ class Seller:
         return result
     
     def findItemRecDay(self):
+        self.sendedList = imMail.checkMailFolderList(['wm', 'notbuy'])
+        # print(self.sendedList)
         browser = webdriver.PhantomJS()
         html = requests.get(self.link)
         selector = etree.HTML(html.text)
         browser.get(self.link)
-        # 
-        browser.find_element_by_xpath('//*[@id="tabbarItems"]/span[3]').click()
-        # //*[@id="J-tab-bar"]/div[4]/div[1]
-        # //*[@id="J-tab-bar"]/div[4]/div[4]
+        time.sleep(1)
+        js="document.documentElement.scrollTop=890"
+        browser.execute_script(js)
+        time.sleep(4)
+        browser.find_element_by_xpath('//*[@id="tabbarItems"]/span[4]').click()
         lis = browser.find_elements_by_xpath('//*[@id="J-tab-bar"]/div[4]/div[1]/ul/div[1]/li')
-        time.sleep(3)
+        # time.sleep(4)
         # todo sleep
         for li in lis:
-            li.send_keys(Keys.DOWN)
-            # //*[@id="J-tab-bar"]/div[4]/div[1]/ul/div[1]/li
-            # //*[@id="J-tab-bar"]/div[4]/div[1]/ul/div[1]/li[1]/a/p
             itemName = li.find_element_by_xpath('./a/p').text
+            if (self.filtName(itemName)):
+                continue
             # //*[@id="J-tab-bar"]/div[4]/div[1]/ul/div[1]/li[2]/a/div[2]/p[1]/em[2]
             itemPrice = li.find_element_by_xpath('./a/div[2]/p[1]/em[2]').text
-            print(itemName + ": " + str(itemPrice))
+            title = str(itemPrice) + ": " + itemName
+            if (('yf:'+title) in self.sendedList):
+                continue
+            # link
+            # //*[@id="J-tab-bar"]/div[4]/div[30]/ul/div[2]/li[1]/a
+            link = li.find_element_by_xpath('./a').get_attribute("href")
+            # //*[@id="tuijianItem"]/ul/div[7]/li[1]/a/div[1]/div/span/img
+            # data-src
+            picLink = li.find_element_by_xpath('./a/div[1]/div/span/img').get_attribute("data-src")
+            
             # //*[@id="J-tab-bar"]/div[4]/div[1]/ul/div[1]/li[1]/a/div[2]/div
             # 
-            itemDataDiv = li.find_element_by_xpath('./a/div[2]/div')
-            itemDatas = eval(itemDataDiv.get_attribute("data-skuid")[1:-1])
+            try:    #售罄则跳过
+                itemDataDiv = li.find_element_by_xpath('./a/div[2]/div')
+                itemDatas = eval(itemDataDiv.get_attribute("data-skuid")[1:-1])
+            except:
+                continue
+            
             logging.debug(itemDatas)
             logging.debug(type(itemDatas))
+            findResult = ''
             if(type(itemDatas) == tuple):
                 for itemData in itemDatas:
-                    self.matchBuyer(itemData)
+                    findResult += self.matchBuyer(itemData)
             else:
-                self.matchBuyer(itemDatas)
+                findResult += self.matchBuyer(itemDatas)
+            if (len(findResult) > 1):
+                print(title)
+                context = link + '\n'
+                context += findResult + '\n'
+                print(context)
+                print(picLink)
+                sendMail.sendMailPic('yf:'+title, context, picLink)
             
             
         logging.info('test')
@@ -97,7 +119,7 @@ class Seller:
         js="document.documentElement.scrollTop=890"
         browser.execute_script(js)
         time.sleep(4)
-        browser.find_element_by_xpath('//*[@id="tabbarItems"]/span[3]').click()
+        browser.find_element_by_xpath('//*[@id="tabbarItems"]/span[4]').click()
         # time.sleep(4)
         self.gundong(browser)
         # //*[@id="J-tab-bar"]/div[4]/div[1]
@@ -143,7 +165,7 @@ class Seller:
                     else:
                         findResult += self.matchBuyer(itemDatas)
                     if (len(findResult) > 1):
-                        title = itemName + ": " + str(itemPrice)
+                        title = str(itemPrice) + ": " + itemName
                         print(title)
                         context = link + '\n'
                         context += findResult + '\n'
