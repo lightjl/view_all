@@ -28,7 +28,7 @@ def recoveryMail(alive, wk):
         imMail.delMail(eBox, 'Sent')
         imMail.delMailLt(eBox, 'dy', 15)
         imMail.markReaded(eBox, 'xiaoshuo')
-        imMail.delMailLt(eBox, 'xiaoshuo', 15)
+        imMail.delMailLt(eBox, 'xiaoshuo', 20)
         imMail.markReaded(eBox, 'nihuigou')
         imMail.delMailLt(eBox, 'nihuigou', 1)
         eBox.logout()

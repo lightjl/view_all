@@ -47,7 +47,7 @@ class Seller:
         time.sleep(1)
         js="document.documentElement.scrollTop=890"
         browser.execute_script(js)
-        time.sleep(4)
+        time.sleep(10)
         browser.find_element_by_xpath('//*[@id="tabbarItems"]/span[4]').click()
         # //*[@id="J-tab-bar"]/div[4]/div[1]/ul/div[2]/li[2]
         divs = browser.find_elements_by_xpath('//*[@id="J-tab-bar"]/div[4]/div[1]/ul/div')

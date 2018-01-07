@@ -75,6 +75,13 @@ def download():
             if (status.text == '下载成功'):
                 logging.info('下载成功')
                 moives.downloadSuccess(moive)
+            else:
+                browser.find_element_by_xpath('//*[@id="OfflineListView"]/dd[1]/div[4]/a[4]').click()
+                time.sleep(1)
+                browser.find_element_by_xpath('//*[@id="confirm"]/div[3]/a[1]/span').click()
+                time.sleep(4)
+                # //*[@id="confirm"]/div[3]/a[1]/span
+                pass
             downloadNum += 1
             if downloadNum >= downloadTotal:
                 break

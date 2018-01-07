@@ -37,10 +37,11 @@ if __name__ == '__main__':
     timeBucket =[['9:00', '11:30'], ['15:00', '21:06']]
     
     workTime = WorkInTime.WorkInTime(timeBucket, relaxTime=60*5)
-    logging.critical("watching weidian")
+    
     # while True:
         #downloaded = checkDownloaded.checkDownloaded()
     while runFlag.value:
+        logging.critical("watching weidian")
         ljxp.findItemRecDay()
         relaxNow = threading.Thread(target=workTime.relax, args=(runFlag,))
         relaxNow.start()
